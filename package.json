@@ -1,0 +1,30 @@
+{
+  "name": "doge-engine",
+  "version": "0.0.2",
+  "description": "A simple game framework built in TS",
+  "main": "./build/exports.js",
+  "types": "./typings/exports.d.ts",
+  "files": [
+    "build",
+    "typings"
+  ],
+  "scripts": {
+    "exports": "node ./scripts/exports.js",
+    "typings": "node ./scripts/typings.js",
+    "fullupload": "npm run exports && npm run typings && node ./scripts/publish.js",
+    "test": "npm start",
+    "dry": "npm publish --dry-run",
+    "start": "cd ./tests && snowpack dev"
+  },
+  "keywords": [
+    "Game",
+    "Engine",
+    "Typescript",
+    "ECS"
+  ],
+  "author": "Bagel03",
+  "license": "ISC",
+  "devDependencies": {
+    "chalk": "^4.1.2"
+  }
+}
