@@ -5,10 +5,7 @@
         "declaration": true,
         "emitDeclarationOnly": true,
         "skipLibCheck": true,
-        "outDir": "./typings-temp",
-        "paths": {
-            "engine/*": ["./src/*"]
-        }
+        "outDir": "./typings-temp"
     },
     "include": ["src/**/*.ts"]
 }

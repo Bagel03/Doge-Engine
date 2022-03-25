@@ -5,7 +5,7 @@ import { EventDispatcher } from "./event_dispatcher";
 import { System } from "./system";
 import { Logger, LoggerColors } from "../utils/logger";
 import { assert } from "../utils/assert";
-import { nameSymbol } from "doge-engine";
+import { nameSymbol } from "../config/symbols";
 
 type Plugin = (world: World) => any;
 

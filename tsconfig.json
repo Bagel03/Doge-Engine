@@ -96,11 +96,7 @@
 
         /* Completeness */
         // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
-        "skipLibCheck": true /* Skip type checking all .d.ts files. */,
-        "paths": {
-            "doge-engine": ["./src/exports.ts"],
-            "engine/*": ["./src/*"]
-        }
+        "skipLibCheck": true /* Skip type checking all .d.ts files. */
     },
     "include": ["src/**/*.ts", "plugins/**/*.ts"]
 }

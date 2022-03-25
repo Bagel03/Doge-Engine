@@ -5,6 +5,7 @@ import { System } from "./system";
 import { protectedComponentSymbol } from "../config/symbols";
 import { assert } from "../utils/assert";
 import { Logger, LoggerColors } from "../utils/logger";
+import { generateID } from "../utils/id";
 
 export class Entity extends EventDispatcher<{
     componentAdded: object;
@@ -18,10 +19,9 @@ export class Entity extends EventDispatcher<{
 
     private readonly components: ClassMap = new ClassMap();
     public readonly systems: (Class | string)[] = [];
-    private readonly relationships: Map<string, Map<string, Entity>> =
-        new Map();
+    private readonly relationships: Map<any, Map<string, Entity>> = new Map();
 
-    constructor(public readonly id: string) {
+    constructor(public readonly id: string = generateID()) {
         super();
         this.id = id;
     }
@@ -117,11 +117,11 @@ export class Entity extends EventDispatcher<{
         this.dispatch("relationshipRemoved", [entity, ent]);
     }
 
-    getRelationship(relationship: string): Map<string, Entity>;
-    getRelationship(relationship: string, single: true): Entity;
+    getRelationship(relationship: any): Map<string, Entity>;
+    getRelationship(relationship: any, single: true): Entity;
 
     getRelationship(
-        relationship: string,
+        relationship: any,
         single?: true
     ): Entity | Map<string, Entity> {
         const relationships = this.relationships.get(relationship);
@@ -129,7 +129,7 @@ export class Entity extends EventDispatcher<{
 
         if (single) {
             if (relationships.size > 1)
-                Entity.logger.log(
+                Entity.logger.warn(
                     `Asked for single relationship "${relationship}" on entity with more than one "${relationship}" relationship`
                 );
             const [[, v]] = relationships;

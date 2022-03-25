@@ -1,5 +1,7 @@
-import { assert, Logger, LoggerColors } from "doge-engine";
-import { KeysOfType, WithOnlyType } from "engine/types/with";
+import { assert } from "../utils/assert";
+import { Logger, LoggerColors } from "../utils/logger";
+import { WithOnlyType } from "../types/with";
+import { generateID } from "../utils/id";
 import { Class } from "../types/class";
 import { Entity } from "./entity";
 import { System } from "./system";
@@ -17,7 +19,7 @@ export class GameObject extends Entity {
     }[] = [];
     static defaultSystems: (Class<System> | string)[] = [];
 
-    constructor(id: string) {
+    constructor(id: string = generateID()) {
         super(id);
 
         GameObject.defaultComponents.forEach((obj) =>
@@ -44,8 +46,3 @@ export class GameObject extends Entity {
         logger.log(`Added method ${name} to all GameObjects`);
     }
 }
-
-export declare interface GameObject {
-    urMom(str: string): string;
-}
-GameObject.addMethod("urMom", (str) => "");

@@ -1,5 +1,6 @@
-import { Class, classType } from "engine/types/class";
-import { MergeTypes } from "engine/types/merge";
+import { Class, classType } from "../types/class";
+import { MergeTypes } from "../types/merge";
+import { cache } from "./decorators";
 
 export const mixin =
     <
@@ -37,5 +38,6 @@ export const mixin =
         return target as (MergeTypes<M> & T) & Class<InstanceType<T> & S>;
     };
 
-export const mergeClasses = <M extends Class[]>(...classes: M) =>
-    mixin(...classes)(class {});
+export const mergeClasses = cache(<M extends Class[]>(...classes: M) =>
+    mixin(...classes)(class {})
+);
