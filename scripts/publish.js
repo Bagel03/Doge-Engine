@@ -2,10 +2,10 @@ const { version } = require("../package.json");
 const { join } = require("path");
 const { readFileSync, writeFileSync } = require("fs");
 const { execSync } = require("child_process");
-const chalk = require("chalk");
+const { blueBright, cyan, redBright, greenBright, bold } = require("chalk");
 const args = process.argv.slice(2);
 
-console.log(chalk.blueBright("[Publishing] Preparing to publish..."));
+console.log(blueBright`Publishing] Preparing to publish...`);
 
 const dry = args.includes("--dry") || args.includes("-d");
 const verbose = args.includes("--verbose");
@@ -22,21 +22,19 @@ const versionIdx =
 
 const newVersion = versionIdx.split("=")[1];
 console.log(
-    chalk.blueBright("[Publishing] Updating version to "),
-    chalk.cyanBright('"' + newVersion + '"')
+    blueBright`[Publishing] Updating version to `,
+    cyanBright` "${newVersion}" `
 );
 
 if (version === newVersion && !dry) {
     console.log(
-        chalk.bold(
-            chalk.redBright(
-                "[Publishing] Versions match, refusing to publish (v"
-            ),
-            chalk.cyan(version),
-            chalk.redBright(")")
+        bold(
+            redBright`[Publishing] Versions match, refusing to publish (v`,
+            cyan(version),
+            redBright`)`
         )
     );
-    process.kill();
+    process.exit(0);
 }
 
 const filePath = join(__dirname, "..", "package.json");
@@ -47,11 +45,11 @@ const newStr = file.replace(
 );
 writeFileSync(filePath, newStr);
 
-console.log(chalk.blueBright("[Publishing] Uploading to npm..."));
+console.log(blueBright`[Publishing] Uploading to npm...`);
 
 const stdout = execSync(`npm publish${dry ? " --dry-run" : ""}`, {
     cwd: join(__dirname, ".."),
 });
 
-console.log(chalk.greenBright("[Publishing] Finished uploading to npm..."));
+console.log(greenBright`[Publishing] Finished uploading to npm...`);
 if (verbose) console.log(stdout);

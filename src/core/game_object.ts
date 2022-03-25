@@ -1,25 +1,24 @@
+import { assert, Logger, LoggerColors } from "doge-engine";
+import { KeysOfType, WithOnlyType } from "engine/types/with";
 import { Class } from "../types/class";
 import { Entity } from "./entity";
 import { System } from "./system";
 
+type GameObjectMethods = WithOnlyType<GameObject, (...args: any[]) => any>;
+const logger = new Logger("Game Object", LoggerColors.blue);
+
 /**
- * @description A wrapper for most entities that sets up all the defaults for you
+ * @description A wrapper for most entities that allows extending
  */
 export class GameObject extends Entity {
     static defaultComponents: {
         component: Class;
         args?: any[];
     }[] = [];
-
     static defaultSystems: (Class<System> | string)[] = [];
 
     constructor(id: string) {
         super(id);
-
-        // this.addComponent(new HierarchyComponent(this));
-        // this.addComponent(new PositionComponent(3, this));
-        // this.addComponent(new ScriptComponent(this));
-        // this.addComponent(new StateManagerComponent(this));
 
         GameObject.defaultComponents.forEach((obj) =>
             this.addComponent(
@@ -27,6 +26,26 @@ export class GameObject extends Entity {
             )
         );
         GameObject.defaultSystems.forEach((sys) => this.enableSystem(sys));
-        // this.enableSystem(ScriptSystem);
+    }
+
+    static overloads: string[];
+
+    static addMethod<N extends keyof GameObjectMethods>(
+        name: N,
+        method: Extract<GameObjectMethods[N], (...args: any[]) => any>
+    ) {
+        assert(
+            !this.overloads.includes(name),
+            `Tried to add a gameObject method twice`
+        );
+
+        this.prototype[name] = method;
+        this.overloads.push(name);
+        logger.log(`Added method ${name} to all GameObjects`);
     }
 }
+
+export declare interface GameObject {
+    urMom(str: string): string;
+}
+GameObject.addMethod("urMom", (str) => "");

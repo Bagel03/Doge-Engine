@@ -1,11 +1,13 @@
-import { ClassMap } from "../utils/classmap";
+import { ClassMap, getClassName, getInstanceName } from "../utils/classmap";
 import { Class } from "../types/class";
 import { Entity } from "./entity";
 import { EventDispatcher } from "./event_dispatcher";
 import { System } from "./system";
 import { Logger, LoggerColors } from "../utils/logger";
-import { Plugin } from "./plugin";
 import { assert } from "../utils/assert";
+import { nameSymbol } from "doge-engine";
+
+type Plugin = (world: World) => any;
 
 // Entities, Systems, Resources, etc
 export class World extends EventDispatcher<{
@@ -18,7 +20,7 @@ export class World extends EventDispatcher<{
 }> {
     public readonly systems: ClassMap = new ClassMap();
     public readonly resources: ClassMap = new ClassMap();
-    private children: Map<string, Entity> = new Map(); // Children
+    private children: Map<string, Entity> = new Map();
     public readonly enabledSystems: (Class<System> | string)[] = [];
     private readonly logger = new Logger("World", LoggerColors.blurple);
 
@@ -28,7 +30,23 @@ export class World extends EventDispatcher<{
     }
 
     addPlugin(plugin: Plugin) {
-        plugin.build(this);
+        try {
+            plugin(this);
+            this.logger.log(
+                `Added plugin ${plugin[nameSymbol] || plugin.name}`
+            );
+        } catch (e) {
+            this.logger.error(
+                `Failed to load plugin ${plugin[nameSymbol] || plugin.name}: `
+            );
+            this.logger.error(e);
+        }
+    }
+
+    addPlugins(plugins: Plugin[]) {
+        this.logger.group(`Adding plugins ${plugins[nameSymbol] || ""}`.trim());
+        plugins.forEach((plugin) => this.addPlugin(plugin));
+        this.logger.groupEnd();
     }
 
     addChild(child: Entity) {

@@ -1,8 +1,8 @@
 const { readdirSync, writeFileSync } = require("fs");
 const { resolve, join } = require("path");
-const chalk = require("chalk");
+const { greenBright, blueBright, bold, cyan } = require("chalk");
 
-console.log(chalk.blueBright("[Exports] Starting to build exports..."));
+console.log(blueBright`[Exports] Starting to build exports...`);
 
 const enginePath = resolve(__dirname, "..", "src");
 
@@ -26,11 +26,11 @@ for (const subDir of subDirs) {
 const str = files.map((str) => `export * from "./${str}";`).join("\n");
 writeFileSync(join(enginePath, "exports.ts"), str);
 console.log(
-    chalk.bold(
-        chalk.greenBright("[Exports] Finished building exports, loaded "),
-        chalk.cyan(files.length),
-        chalk.greenBright(" exports from "),
-        chalk.cyan(subDirs.length),
-        chalk.greenBright("subdirectories")
+    bold(
+        greenBright`[Exports] Finished building exports, loaded `,
+        cyan(files.length),
+        greenBright` exports from `,
+        cyan(subDirs.length),
+        greenBright`subdirectories`
     )
 );

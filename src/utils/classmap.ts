@@ -6,6 +6,10 @@ declare global {
     interface Function {
         [nameSymbol]?: string;
     }
+
+    interface Array<T> {
+        [nameSymbol]?: string;
+    }
 }
 
 export const getClassName = (c: Class | string): string => {

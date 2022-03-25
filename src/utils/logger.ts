@@ -17,6 +17,14 @@ export class Logger {
         this.color = color;
     }
 
+    group(...info: any) {
+        console.groupCollapsed(...this.getEmojiStyleArr(" "), info);
+    }
+
+    groupEnd() {
+        console.groupEnd();
+    }
+
     log(...info: any) {
         console.log(...this.getEmojiStyleArr(" "), ...info);
     }
